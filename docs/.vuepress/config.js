@@ -20,8 +20,8 @@ const plugins = [
 
 module.exports = {
   theme: 'vdoing',
-  title: "sandyyyz-notes",
-  description: 'vdoing博客主题模板',
+  title: "sandyyyz's blog",
+  description: 'sandyyyz的小站',
   base: '/', // ✅ 或者 '/'，取决于仓库名
   markdown: {
     lineNumbers: true,
