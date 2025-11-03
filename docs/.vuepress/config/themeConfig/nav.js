@@ -6,4 +6,5 @@ module.exports = [
   { text: '工具链', link: '/工具链/' },
   { text: '留言板', link: '/message-board/' },
   { text: '我的博客', link: 'https://wiki.eryajf.net' },
+  { text: 'Github', link: 'https://github.com/sandyyyz' },
 ]
