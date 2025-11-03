@@ -1,7 +1,7 @@
 ---
 home: true
 heroImage: https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220720_132208.png
-tagline: Vdoing博客主题模板
+tagline: sandyyyz的小站
 heroText: sandyyyz's blog
 actionText: 开始浏览 →
 actionLink: /pages/archives/

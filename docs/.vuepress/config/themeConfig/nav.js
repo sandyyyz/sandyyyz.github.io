@@ -5,5 +5,4 @@ module.exports = [
   { text: '分布式',link: '/分布式/',},
   { text: '工具链', link: '/工具链/' },
   { text: '留言板', link: '/message-board/' },
-  { text: 'Github', link: 'https://github.com/sandyyyz' },
 ]
