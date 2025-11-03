@@ -13,7 +13,7 @@ const plugins = [
       clientId: "Ov23liGQDVSA9fvCIqRm",
       clientSecret: "e79eaa54d211ab06e2f7bc260507eb153af0ff8f",
       owner: "sandyyyz",          // ✅ 改成你自己的用户名
-      repo: "sandyyyz-notes",     // ✅ 改成你的博客仓库名
+      repo: "sandyyyz.github.io",     // ✅ 改成你的博客仓库名
     },
   ],
 ];

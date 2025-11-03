@@ -1,9 +1,9 @@
 // nav
 module.exports = [
   { text: '首页', link: '/' },
-  { text: 'one',link: '/one/',},
-  { text: 'two',link: '/two/',},
-  { text: 'three', link: '/three/' },
+  { text: 'Linux',link: '/Linux/',},
+  { text: '分布式',link: '/分布式/',},
+  { text: '工具链', link: '/工具链/' },
   { text: '留言板', link: '/message-board/' },
   { text: '我的博客', link: 'https://wiki.eryajf.net' },
 ]
