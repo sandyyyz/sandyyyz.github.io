@@ -1,12 +1,41 @@
 ---
-home: true
-heroImage: https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220720_132208.png
-tagline: sandyyyz的小站
-heroText: sandyyyz's blog
-actionText: 开始浏览 →
-actionLink: /pages/archives/
-bannerBg: none # auto => 网格纹背景(有bodyBgImg时无背景)，默认 | none => 无 | '大图地址' | background: 自定义背景样式       提示：如发现文本颜色不适应你的背景时可以到palette.styl修改$bannerTextColor变量
+layout: home
 
-# 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
-postList: simple
+hero:
+  name: sandyyyz
+  text: Linux kernel & systems
+  tagline: whoami — notes on the kernel, toolchains and hardware.  # TODO: 换成一句话自我介绍
+  actions:
+    - theme: brand
+      text: 浏览笔记
+      link: /notes/linux-kernel/
+    - theme: alt
+      text: LWN 周刊
+      link: /notes/lwn-weekly/
+
+features:
+  - icon: 🐧
+    title: Linux Kernel
+    details: 启动、执行、内存管理、并发与同步、追踪与调试
+    link: /notes/linux-kernel/
+  - icon: 🔧
+    title: Toolchain
+    details: 编译、链接与加载、ELF、ABI
+    link: /notes/toolchain/
+  - icon: 💾
+    title: Hardware
+    details: 固件与启动、串口、存储、互连、加速器
+    link: /notes/hardware/
+  - icon: 📰
+    title: Reports
+    details: LWN 每周热点议题摘要与内核补丁深读
+    link: /notes/kernel-digest/
+  - icon: 🧪
+    title: Labs
+    details: 可复现的编译链接与内核调试实验
+    link: /notes/compiling-linking/
+  - icon: 🖥️
+    title: System Tools
+    details: 开发环境、容器、观测与远程工具
+    link: /notes/system-tools/
 ---

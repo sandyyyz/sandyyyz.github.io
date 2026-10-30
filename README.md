@@ -1,136 +1,34 @@
-<div align="center">
-<h1>sandyyyz-notes</h1>
+# sandyyyz.github.io
 
-[![Auth](https://img.shields.io/badge/Auth-eryajf-ff69b4)](https://github.com/eryajf)
-[![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/eryajf/sandyyyz-notes)
-[![GitHub Issues](https://img.shields.io/github/issues/eryajf/sandyyyz-notes.svg)](https://github.com/eryajf/sandyyyz-notes/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/eryajf/sandyyyz-notes)](https://github.com/eryajf/sandyyyz-notes/pulls)
-[![GitHub Pull Requests](https://img.shields.io/github/stars/eryajf/sandyyyz-notes)](https://github.com/eryajf/sandyyyz-notes/stargazers)
-[![GitHub license](https://img.shields.io/github/license/eryajf/sandyyyz-notes)](https://github.com/eryajf/sandyyyz-notes/blob/main/LICENSE)
-[![HitCount](https://views.whatilearened.today/views/github/eryajf/sandyyyz-notes.svg)](https://github.com/eryajf/sandyyyz-notes)
-[![website eryajf.github.io/sandyyyz-notes](https://img.shields.io/website-up-down-green-red/http/eryajf.github.io/sandyyyz-notes.svg)](https://eryajf.github.io/sandyyyz-notes/)
+Personal blog — Linux kernel & systems engineering notes.
 
-<p align="center"> 📖 Vdoing博客主题静态部署模板 📖</p>
+Built with [VitePress](https://vitepress.dev/), deployed to GitHub Pages via
+GitHub Actions.
 
-<img src="https://cdn.jsdelivr.net/gh/eryajf/tu@main/img/image_20240420_214408.gif" width="800"  height="3">
-</div><br>
+## How it works
 
-⚗️ 功能亮点：
+Blog content lives in the separate public repo
+[sandyyyz/Notes](https://github.com/sandyyyz/Notes). Nothing is duplicated
+here:
 
-- 三步配置生成一个属于自己的免费个人博客。
-- 使用[Vdoing](https://github.com/xugaoyi/vuepress-theme-vdoing)主题，感谢作者写出如此简洁美观的博客主题。
-- 模板已内置集成全文搜索能力。
-- 模板已内置集成基于 GitHub Issue 的 vssue 评论系统。
-- 本地 Markdown 编写文档，提交到远程之后`GitHub Actions`自动构建发布。
+- `npm run sync` (`scripts/sync-notes.mjs`) clones the latest notes from the
+  `Notes` repo into `docs/notes/` (git-ignored), hoisting `knowledge/`,
+  `reports/` and `labs/` to the top level and generating index pages for
+  directories that lack one.
+- The sidebar and section nav are generated at build time by
+  `docs/.vitepress/config.ts`, which scans `docs/notes/` and uses each note's
+  first `#` heading as its title.
+- CI runs `npm run build` (which runs the sync first) on every push to `main`
+  and on a daily schedule, so the site tracks the notes repo automatically.
 
-🦩 以下仅需简短的几步配置，就可以配置拥有一个免费的个人博客。准备好了吗，来吧！
+Only what is pushed to the `Notes` repo is published; private notes never
+leave the local machine.
 
-## 效果展示
-
-首页效果图：
-
-![image_20220721_113642](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_113642.png)
-
-内部文章效果：
-
-![image_20220721_165503](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_165503.png)
-
-如果你也想要一个这种效果的博客，请往下看，只需简单几个配置步骤，即可免费拥有。
-
-## 初始配置
-
-首先访问模板仓库：[sandyyyz-notes](https://github.com/eryajf/sandyyyz-notes)。点击此仓库右侧的 `Use this template`
-
-![image_20220721_153908](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_153908.png)
-
-然后根据自己的实际情况，给仓库起名字：
-
-![image_20220721_154115](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_154115.png)
-
-> 这里有一个注意点：仓库的名字将会是 `GitHub Pages` 的访问一级路由。比如上边我仓库名字定义为：`lql-notes`，那么配置成功之后的首页访问路径是： https://lql95.github.io/lql-notes ，如果你想让首页的访问路径是根，那么只需把仓库名字命名为：`lql95.github.io`。
-
-创建完成之后，自己仓库中的项目内容如下：
-
-![image_20220721_154502](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_154502.png)
-
-然后将代码克隆到本地，使用编辑器打开：
+## Development
 
 ```sh
-$ git clone git@github.com:lql95/lql-notes.git
+npm install
+npm run dev      # sync notes + start dev server
+npm run build    # sync notes + build static site
+npm run preview  # preview the built site
 ```
-
-## 调整内容
-
-接下来的操作就是将模板中的内容，替换成自己想要的内容，好在模板我已经精简了很多，不需要繁琐的配置，这里简单说明一下：
-
-### 全局替换关键字
-
-![image_20220721_154907](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_154907.png)
-
-这样基本上就搞定了配置内容的一大步，剩下的就是一些修改美化方面的内容了。
-
-### 配置首页
-
-首页的配置信息在 `docs/index.md` 这个文件当中，我们可以参照官方文档进行按需配置：[点我去看文档](https://doc.xugaoyi.com/pages/f14bdb/)
-
-### 配置评论
-
-模板默认内置了 vssue 的评论组件，也是基于 github 的 issue 作为评论的存储数据。
-
-只需两步即可完成配置：
-
-- 第一步：[参考官方文档](https://vssue.js.org/zh/guide/github.html)，创建一个`GitHub OAuth App`。或者不用看官方文档，直接看如下两个步骤。
-
-  [点击此处](https://github.com/settings/applications/new)，进入创建页面：
-
-  ![image_20220721_155930](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_155930.png)
-
-  点击注册之后，就进入到了详情页面，可以看到`Client ID`，点击 `Generate a new client secret` 生成一个秘钥：
-
-  ![image_20220721_160023](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_160023.png)
-
-- 第二步：将配置信息填写到 `docs/.vuepress/config.js` 中。
-
-  ```yaml
-  // vssue 评论插件
-    plugins: [
-      [
-        "vuepress-plugin-vssue-global",
-        {
-          platform: "github",
-          title: "[Comment]<%- frontmatter.title %>",
-          needComments: true,
-          // 其他的 Vssue 配置
-          autoCreateIssue: true,
-          clientId: "d3ec4ca6363950ca41a2",
-          clientSecret: "897465b6393f1d663e6128d2fab6959a0c0333cc",
-          owner: "lql95",
-          repo: "lql-notes",
-        },
-      ],
-    ],
-  ```
-
-现在基本配置项都已经搞定，可以将代码提交上去，然后`GitHub Actions`会自动将代码部署到 `gh-pages` 分支。
-
-## 终极配置
-
-终极配置就是等 GitHub Actions 跑完之后，我们能看到分支当中多了一个 `gh-pages` 分支。
-
-此时点击 `Settings` ---> `Pages`，进行如下配置：
-
-![image_20220721_160920](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_160920.png)
-
-两个配置项，第一个表示选择哪个分支作为静态文件，第二个表示选择前边分支的哪个目录。
-
-点击保存之后，静待一分钟，然后就可以访问上边提供的那个地址了。成果如下：
-
-![image_20220721_161147](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_161147.png)
-
-> 如果你想配置个人自定义域名，可参考此文档：[https://eryajf.github.io/HowToStartOpenSource/pages/06d15f/](https://eryajf.github.io/HowToStartOpenSource/pages/06d15f/)
-
-如果一路配置没问题，那么文章也应该会自动加载评论功能：
-
-![image_20220721_165020](https://cdn.jsdelivr.net/gh/eryajf/tu/img/image_20220721_165020.png)
-
-剩下的就是一些细节的优化调整，稍微打磨之后，就可以愉快地撰写你的博客了。

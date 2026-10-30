@@ -1,35 +1,41 @@
-name: Build Deploy
+name: Build & Deploy
 
-# 在main分支发生push事件时触发。
 on:
   push:
     branches:
       - main
+  schedule:
+    # daily at 02:00 UTC — pick up new notes even without blog commits
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
-env: # 设置环境变量
-  TZ: Asia/Shanghai # 时区（设置时区可使页面中的`最近更新时间`使用时区时间）
+env:
+  TZ: Asia/Shanghai
 
 permissions:
   contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: build project ⚗️
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
-      - run: |
-          npm install
-          yarn build
+          node-version: 20
+          cache: npm
 
-      - name: Deploy 🚀
+      - name: Install & Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
-        env: # 设置环境变量
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # toKen私密变量
         with:
-          folder: docs/.vuepress/dist
-          branch: gh-pages # 部署到的分支
+          token: ${{ secrets.GITHUB_TOKEN }}
+          folder: docs/.vitepress/dist
+          branch: gh-pages

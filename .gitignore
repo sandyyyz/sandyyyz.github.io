@@ -1,19 +1,15 @@
-# npm
-package-lock.json
+# node
 node_modules
 
-# yarn
-yarn.lock
+# synced notes (fetched at build time, never committed)
+docs/notes
 
-# vscode
-.vscode
+# notes repo cache (sync script)
+.notes-cache
 
-# vuepress
-docs/.vuepress/dist
-
-# 百度链接推送
-urls.txt
+# vitepress
+docs/.vitepress/cache
+docs/.vitepress/dist
 
 # mac
 .DS_Store
-yarn-error.log

@@ -1,0 +1,108 @@
+/**
+ * sandyyyz.github.io — kernel-developer aesthetic
+ * default dark, terminal-green accent, monospace chrome, minimal decoration
+ */
+
+:root {
+  /* terminal green */
+  --vp-c-brand-1: #3fb950;
+  --vp-c-brand-2: #56d364;
+  --vp-c-brand-3: #2ea043;
+  --vp-c-brand-soft: rgba(63, 185, 80, 0.14);
+
+  --vp-font-family-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular,
+    Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* home hero: quiet, no big glow */
+  --vp-home-hero-name-color: var(--vp-c-text-1);
+  --vp-home-hero-image-background-image: none;
+  --vp-home-hero-image-filter: none;
+
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: var(--vp-c-bg);
+}
+
+.dark {
+  /* subtle dark tint on links hovering instead of glow */
+  --vp-c-brand-soft: rgba(63, 185, 80, 0.16);
+}
+
+/* ---------------------------------------------------------------------------
+ * monospace chrome: nav, sidebar, hero — content stays in the body font
+ * ------------------------------------------------------------------------- */
+.VPNavBarTitle .title,
+.VPNavBarMenuLink,
+.VPSidebarItem .text,
+.VPHomeHero .name,
+.VPHomeHero .text,
+.VPHomeHero .tagline,
+.VPFooter,
+.VPLocalSearchBox {
+  font-family: var(--vp-font-family-mono);
+  letter-spacing: -0.01em;
+}
+
+/* nav: a hint of a terminal prompt on the site title */
+.VPNavBarTitle .title::before {
+  content: '~/';
+  color: var(--vp-c-brand-1);
+  opacity: 0.85;
+  margin-right: 0.1em;
+}
+
+/* sidebar: flatter, quieter */
+.VPSidebar {
+  border-right: 1px solid var(--vp-c-divider);
+}
+
+.VPSidebarItem .text {
+  font-size: 0.8125rem;
+}
+
+.VPSidebarItem.is-active > .item > .indicator {
+  background-color: var(--vp-c-brand-1);
+}
+
+/* links: no underline noise, green on hover */
+.vp-doc a {
+  text-decoration: none;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+}
+
+/* code: quieter inline code */
+.vp-doc :not(pre) > code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.875em;
+  background-color: var(--vp-c-default-soft);
+  border-radius: 3px;
+  padding: 0.15em 0.35em;
+}
+
+/* hero tagline styled like a shell prompt */
+.VPHomeHero .tagline::before {
+  content: '$ ';
+  color: var(--vp-c-brand-1);
+}
+
+/* features: thin border cards, no floating shadows */
+.VPFeatures .VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background-color: transparent;
+}
+
+.VPFeatures .VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: none;
+}
+
+/* footer: one quiet line */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
+  font-size: 0.75rem;
+}
