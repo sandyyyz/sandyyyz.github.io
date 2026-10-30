@@ -1,0 +1,15 @@
+import{_ as s,o as a,c as p,a2 as e}from"./chunks/framework.CdvW4CUT.js";const m=JSON.parse('{"title":"Dynamic Link","description":"","frontmatter":{},"headers":[],"relativePath":"notes/toolchain/linking-loading/dynamic_link.md","filePath":"notes/toolchain/linking-loading/dynamic_link.md"}'),l={name:"notes/toolchain/linking-loading/dynamic_link.md"};function i(c,n,t,o,r,d){return a(),p("div",null,[...n[0]||(n[0]=[e(`<h1 id="dynamic-link" tabindex="-1">Dynamic Link <a class="header-anchor" href="#dynamic-link" aria-label="Permalink to &quot;Dynamic Link&quot;">​</a></h1><p>编译阶段，各个源文件被编译成目标文件。目标文件中包含代码、数据、符号表和重定位信息，但通常不包含最终运行地址。链接阶段，链接器将多个目标文件组合成 ELF 文件，确定各段的布局，并为动态库符号生成 <code>.plt</code>、<code>.got.plt</code>、<code>.rela.plt</code> 等结构。对于动态库函数调用，调用点会跳转到对应的 PLT 表项。</p><p>链接器会初始化 GOT 表项，使其最初指向 PLT 内部的解析路径。程序执行时，内核通过 <code>execve()</code> 加载 ELF 和动态链接器 ld.so，建立进程地址空间后将控制权交给 ld.so。动态链接器加载所需共享库，完成必要重定位、TLS 初始化以及构造函数执行。</p><p>对于采用 Lazy Binding 的函数调用，第一次执行时：</p><div class="language-text vp-adaptive-theme line-numbers-mode"><button title="Copy Code" class="copy"></button><span class="lang">text</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>main</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>foo@plt</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>GOT[foo]</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>foo@plt+6</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>plt0</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>ld.so</span></span></code></pre><div class="line-numbers-wrapper" aria-hidden="true"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>动态链接器根据重定位表找到 foo 在共享库中的真实地址，将其写回对应 GOT 表项，然后直接跳转到真实函数执行。</p><p>后续再次调用：</p><div class="language-text vp-adaptive-theme line-numbers-mode"><button title="Copy Code" class="copy"></button><span class="lang">text</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>foo@plt</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>GOT[foo]</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>real foo</span></span></code></pre><div class="line-numbers-wrapper" aria-hidden="true"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>由于 GOT 已经包含真实地址，因此无需再进入动态链接器。</p>`,9)])])}const u=s(l,[["render",i]]);export{m as __pageData,u as default};
