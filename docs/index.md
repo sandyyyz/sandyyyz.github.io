@@ -4,7 +4,7 @@ layout: home
 hero:
   name: sandyyyz
   text: Linux kernel & systems
-  tagline: whoami — notes on the kernel, toolchains and hardware.  # TODO: 换成一句话自我介绍
+  tagline: cat /proc/sandyyyz — reading the kernel, one page fault at a time.
   actions:
     - theme: brand
       text: 浏览笔记

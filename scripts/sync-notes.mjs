@@ -20,7 +20,7 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const NOTES_REPO = 'https://github.com/sandyyyz/Notes.git'
@@ -95,6 +95,87 @@ function readH1(file) {
   }
 }
 
+function collectMd(dir, out = []) {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name.startsWith('.')) continue
+    const p = join(dir, e.name)
+    if (e.isDirectory()) collectMd(p, out)
+    else if (e.name.endsWith('.md') && e.name !== 'index.md' && e.name !== 'README.md')
+      out.push(p)
+  }
+  return out
+}
+
+function hasMd(dir) {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name.startsWith('.')) continue
+    if (e.isFile() && e.name.endsWith('.md')) return true
+    if (e.isDirectory() && hasMd(join(dir, e.name))) return true
+  }
+  return false
+}
+
+// Flat, newest-first index for the weekly digest (lwn-weekly/YYYY/MM/DD.md)
+function genLwnWeeklyIndex() {
+  const dir = join(DEST, 'lwn-weekly')
+  if (!existsSync(dir)) return
+  const entries = collectMd(dir)
+    .map((f) => {
+      const rel = relative(dir, f).split(/[\\/]/).join('/')
+      const m = rel.match(/^(\d{4})\/(\d{2})\/(\d{2})\.md$/)
+      return m && { y: m[1], mo: m[2], d: m[3], rel }
+    })
+    .filter(Boolean)
+    .sort((a, b) => Number(b.y + b.mo + b.d) - Number(a.y + a.mo + a.d))
+
+  const lines = ['# LWN 周刊', '']
+  let lastYm = null
+  for (const e of entries) {
+    const ym = `${e.y}-${e.mo}`
+    if (ym !== lastYm) {
+      lines.push(`## ${ym}`, '')
+      lastYm = ym
+    }
+    lines.push(`- [${e.mo}-${e.d} LWN 周报](${e.rel})`)
+  }
+  writeFileSync(join(dir, 'index.md'), lines.join('\n') + '\n')
+}
+
+// Flat, newest-first index for the kernel digest:
+// dailies (kernel-digest/YYYY/MM/DD.md) + deep patch reports
+// (kernel-digest/deep/YYYY/MM/DD-<hash>/report.md, hash hidden)
+function genKernelDigestIndex() {
+  const dir = join(DEST, 'kernel-digest')
+  if (!existsSync(dir)) return
+  const daily = []
+  const deep = []
+  for (const f of collectMd(dir)) {
+    const rel = relative(dir, f).split(/[\\/]/).join('/')
+    let m = rel.match(/^(\d{4})\/(\d{2})\/(\d{2})\.md$/)
+    if (m) {
+      daily.push({ key: m[1] + m[2] + m[3], text: `${m[2]}-${m[3]} Kernel 日报`, rel })
+      continue
+    }
+    m = rel.match(/^deep\/(\d{4})\/(\d{2})\/(\d{2})-[0-9a-f]+\/report\.md$/)
+    if (m) deep.push({ key: m[1] + m[2] + m[3], text: `${m[2]}-${m[3]} · ${readH1(f) || rel}`, rel })
+  }
+  const byDateDesc = (a, b) => Number(b.key) - Number(a.key)
+  daily.sort(byDateDesc)
+  deep.sort(byDateDesc)
+
+  const lines = ['# Kernel 深读', '']
+  if (daily.length) {
+    lines.push('## 日报', '')
+    for (const e of daily) lines.push(`- [${e.text}](${e.rel})`)
+    lines.push('')
+  }
+  if (deep.length) {
+    lines.push('## 深度补丁解析', '')
+    for (const e of deep) lines.push(`- [${e.text}](${e.rel})`)
+  }
+  writeFileSync(join(dir, 'index.md'), lines.join('\n') + '\n')
+}
+
 function linkTitle(file) {
   return readH1(file) || file.replace(/\.md$/, '')
 }
@@ -107,10 +188,16 @@ function genIndex(dir, name) {
   const lines = [`# ${DIR_TITLES[name] || name}`, '']
   for (const e of entries) {
     if (e.isDirectory()) {
-      // ensure the subdir gets an index first (recursive, bottom-up not needed:
-      // VitePress resolves links at build time after all files exist)
-      genIndex(join(dir, e.name), e.name)
-      lines.push(`- [${DIR_TITLES[e.name] || linkTitleForDir(join(dir, e.name), e.name)}](${e.name}/)`)
+      const child = join(dir, e.name)
+      if (!hasMd(child)) {
+        // source-only directory: list as plain text, no page
+        lines.push(`- ${e.name}/`)
+        continue
+      }
+      if (!existsSync(join(child, 'index.md')) && !existsSync(join(child, 'README.md'))) {
+        genIndex(child, e.name)
+      }
+      lines.push(`- [${DIR_TITLES[e.name] || linkTitleForDir(child, e.name)}](${e.name}/)`)
     } else if (e.name.endsWith('.md')) {
       lines.push(`- [${linkTitle(join(dir, e.name))}](${e.name})`)
     }
@@ -129,11 +216,14 @@ function linkTitleForDir(dir, name) {
   return DIR_TITLES[name] || name
 }
 
+// Sections with hand-tuned flat indexes; skip generic generation inside them.
+const SPECIAL_SECTIONS = new Set(['lwn-weekly', 'kernel-digest'])
+
 function walk(dir) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     if (e.name.startsWith('.')) continue
     const p = join(dir, e.name)
-    if (e.isDirectory()) {
+    if (e.isDirectory() && hasMd(p)) {
       if (!existsSync(join(p, 'index.md')) && !existsSync(join(p, 'README.md'))) {
         genIndex(p, e.name)
       }
@@ -142,8 +232,11 @@ function walk(dir) {
   }
 }
 
+genLwnWeeklyIndex()
+genKernelDigestIndex()
+
 for (const e of readdirSync(DEST, { withFileTypes: true })) {
-  if (!e.name.startsWith('.') && e.isDirectory()) {
+  if (!e.name.startsWith('.') && e.isDirectory() && !SPECIAL_SECTIONS.has(e.name)) {
     const p = join(DEST, e.name)
     if (!existsSync(join(p, 'index.md')) && !existsSync(join(p, 'README.md'))) {
       genIndex(p, e.name)

@@ -13,6 +13,9 @@
   --vp-font-family-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular,
     Menlo, Consolas, 'Liberation Mono', monospace;
 
+  /* full-bleed layout: navbar, home and content span the whole window */
+  --vp-layout-max-width: 100%;
+
   /* home hero: quiet, no big glow */
   --vp-home-hero-name-color: var(--vp-c-text-1);
   --vp-home-hero-image-background-image: none;
@@ -20,6 +23,25 @@
 
   --vp-button-brand-border: transparent;
   --vp-button-brand-text: var(--vp-c-bg);
+}
+
+/* home: hero and feature grids stretch with the window (text column inside
+   the hero keeps its own readable max-width).
+   .Layout prefix + later source order beats the theme's scoped [data-v-*] rules */
+.Layout .VPHero .container,
+.Layout .VPFeatures .container {
+  max-width: 100%;
+}
+
+/* docs: widen the reading column 688px -> 960px; right-hand outline follows */
+.Layout .VPDoc.has-aside .content-container {
+  max-width: 960px;
+}
+
+@media (min-width: 1440px) {
+  .Layout .VPDoc:not(.has-sidebar) .container {
+    max-width: 100%;
+  }
 }
 
 .dark {
