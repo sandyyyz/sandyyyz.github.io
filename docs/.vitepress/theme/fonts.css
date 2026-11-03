@@ -1631,3 +1631,20 @@
   font-display: swap;
   src: url(/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2) format('woff2');
 }
+
+/* Latin Modern Roman (serif Latin, matching the md2pdf/LaTeX body font) */
+@font-face {
+  font-family: 'Latin Modern Roman';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/latin-modern/LM-regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Latin Modern Roman';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/latin-modern/LM-bold.woff2) format('woff2');
+}
